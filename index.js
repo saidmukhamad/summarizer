@@ -1,18 +1,27 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-const app = express();
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
-let html = fs.readFileSync("./index.html");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const html_path = "./src/index.html";
+
+let html = fs.readFileSync(html_path);
 let clients = [];
 
+const app = express();
+app.use(express.static(path.join(__dirname, "public")));
+
 function updateHTML() {
-  html = fs.readFileSync("./index.html", "utf-8");
+  html = fs.readFileSync(html_path, "utf-8");
   console.log("HTML content updated");
   clients.forEach((client) => client.res.write(`data: ${JSON.stringify({ html })}\n\n`));
 }
 
-fs.watch("./index.html", (eventType, filename) => {
+fs.watch(html_path, (eventType, filename) => {
   if (eventType === "change") {
     console.log(`${filename} has been modified`);
     updateHTML();
