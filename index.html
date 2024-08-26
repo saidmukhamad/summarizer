@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <form class="flex flex-col">
+      <div>
+        <input />
+      </div>
+      <button>Submit this</button>
+    </form>
+  </body>
+
+  <script>
+    const eventSource = new EventSource("/updates");
+
+    eventSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      document.documentElement.innerHTML = data.html;
+    };
+  </script>
+</html>
